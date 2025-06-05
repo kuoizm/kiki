@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>대장균 - Escherichia coli</title>
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+  <style>
+    .wrap 
+      {width: 1000;}
+
+      body {
+  background-color: #EDFFFF;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  z-index: 0;
+}
+
+body {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg11.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.3;
+  mix-blend-mode: hard-light;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+
+    .container {
+      display: flex;
+      padding: 200px;
+      padding-bottom: 50px;
+      color: #000;
+    }
+
+    .ecoli-image {
+      width: 50%;
+      padding-right: 40px;
+    }
+
+    .ecoli-image img {
+      width: 100%;
+      border: 2px solid blue;
+    }
+
+    .ecoli-text {
+      width: 50%;
+    }
+
+    .ecoli-text h1 {
+      color: blue;
+      font-size: 4em;
+      margin: 0;
+    }
+
+    .ecoli-text blockquote {
+      background-color: yellow;
+      font-weight: bold;
+      margin: 10px 0;
+      padding: 5px;
+    }
+
+    .ecoli-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .ecoli-table td {
+      border: 1px solid #aaa;
+      padding: 8px;
+    }
+
+    .ecoli-desc {
+      margin-top: 20px;
+      font-size: 1em;
+      line-height: 1.7;
+    }
+
+    .indicator {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .indicator img {
+      width: 60%;
+    }
+
+    .popup {
+  display: none;
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: #00ff00;
+  padding: 10px 40px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  line-height: 1.6;
+  box-shadow: 0 0 20px lime;
+  z-index: 1000;
+}
+
+.zoom-wrapper {
+  width: 500px;            /* 프레임 크기 고정 */
+  height: 400px;           /* 너가 원하는 네모 크기로 조절 */
+  overflow: hidden;        /* 바깥은 잘라냄 */
+  border: 2px solid blue;
+  position: relative;
+}
+
+.zoom-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 꽉 차게 */
+  transition: transform 0.3s ease;
+  transform-origin: center center;  /* 중심 확대 */
+}
+
+  .image-canvas {
+    position: relative;
+    width: 1000px;
+    height: 1000px;
+    margin: auto;
+    background-image: url('bg.png'); /* 배경 텍스처 */
+    background-size: cover;
+  }
+
+  .image-canvas img {
+    position: absolute;
+    object-fit: cover;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  }
+
+  /* 이미지별 위치 */
+  .img1 {
+    top: 320px;
+    left: 600px;
+    width: 320px;
+    border: 1px solid blue;
+  }
+
+  .img2 {
+    top: 0px;
+    left: 10px;
+    width: 170px;
+  }
+
+  .img3 {
+    top: 00px;
+    left: 10px;
+    width: 190px;
+  }
+
+  .img4 {
+    top: 50px;
+    left: 620px;
+    width: 500px;
+  }
+
+  .img5 {
+    top: 180px;
+    left: 450px;
+    width: 100px;
+  }
+
+  .img6 {
+    top: 70px;
+    left: 580px;
+    width: 100px;
+  }
+
+  .img7 {
+    top: 600px;
+    left: 430px;
+    width: 600px;
+  }
+
+  .img8 {
+    top: 560px;
+    left: -500px;
+    width: 120px;
+  }
+  .img9 {
+    top: 20px;
+    left: 00px;
+    width: 320px;
+    border: 3px solid blue;
+  }
+
+  .padding 
+  { top: 150px;}
+
+  /* 회전 */
+@keyframes rotate360 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.rotate {
+  animation: rotate360 12s linear infinite;
+}
+
+@keyframes rotate720 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(720deg); }
+}
+.rotate2 {
+  animation: rotate720 6s linear infinite;
+}
+
+/* 위아래 떠다님 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+.float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 미세하게 흔들리는 느낌 */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1.5deg); }
+  75% { transform: rotate(-1.5deg); }
+}
+.wiggle {
+  animation: wiggle 1.2s ease-in-out infinite;
+}
+
+/* 랜덤하게 둥둥 떠다니는 듯 */
+/* 드리프트: 유랑하는 듯한 부유 애니메이션 */
+@keyframes wander {
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  20%  { transform: translate(10px, -5px) rotate(2deg) scale(1.05); }
+  40%  { transform: translate(-15px, 10px) rotate(-1deg) scale(0.97); }
+  60%  { transform: translate(20px, 15px) rotate(1.5deg) scale(1.03); }
+  80%  { transform: translate(-10px, -15px) rotate(-2deg) scale(1); }
+  100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+
+.drift {
+  animation: wander 14s ease-in-out infinite;
+  animation-direction: alternate;
+}
+
+/* 이미지마다 시작시간 살짝씩 다르게 하면 자연스러움 */
+.delay1 { animation-delay: 1s; }
+.delay2 { animation-delay: 2.5s; }
+.delay3 { animation-delay: 4.2s; }
+/* 필요하면 더 추가 */
+
+@keyframes wander1 {
+  0%   { transform: translate(0vw, 10vh) rotate(0deg); }
+  50%  { transform: translate(80vw, 12vh) rotate(12deg); }
+  100% { transform: translate(0vw, 10vh) rotate(-8deg); }
+}
+
+/* 🌊 Wander 2: 오른쪽 위 → 왼쪽 아래 */
+@keyframes wander2 {
+  0%   { transform: translate(90vw, 0vh) rotate(0deg); }
+  25%  { transform: translate(70vw, 20vh) rotate(8deg); }
+  50%  { transform: translate(40vw, 50vh) rotate(-12deg); }
+  75%  { transform: translate(20vw, 70vh) rotate(10deg); }
+  100% { transform: translate(0vw, 90vh) rotate(-8deg); }
+}
+
+/* 🌪 Wander 3: 위↔아래 리듬 이동 */
+@keyframes wander3 {
+  0%   { transform: translate(30vw, 0vh) rotate(0deg); }
+  50%  { transform: translate(35vw, 80vh) rotate(20deg); }
+  100% { transform: translate(30vw, 0vh) rotate(-10deg); }
+}
+
+/* 🌀 Wander 4: 대각선 빠르게 왕복 */
+@keyframes wander4 {
+  0%   { transform: translate(0vw, 80vh) rotate(0deg); }
+  50%  { transform: translate(90vw, 0vh) rotate(15deg); }
+  100% { transform: translate(0vw, 80vh) rotate(-15deg); }
+}
+
+/* 🫧 Wander 5: 가운데서 소규모 유랑 */
+@keyframes wander5 {
+  0%   { transform: translate(45vw, 45vh) scale(1); }
+  25%  { transform: translate(50vw, 40vh) scale(1.05) rotate(3deg); }
+  50%  { transform: translate(48vw, 55vh) scale(0.95) rotate(-2deg); }
+  75%  { transform: translate(47vw, 43vh) scale(1.02) rotate(1deg); }
+  100% { transform: translate(45vw, 45vh) scale(1) rotate(0); }
+}
+
+/* 애니메이션 적용 */
+.wander1 {
+  animation: wander1 15s linear infinite alternate;
+}
+.wander2 {
+  animation: wander2 15s ease-in-out infinite alternate;
+}
+.wander3 {
+  animation: wander3 20s ease-in-out infinite alternate;
+}
+.wander4 {
+  animation: wander4 18s ease-in-out infinite alternate;
+}
+.wander5 {
+  animation: wander5 16s ease-in-out infinite alternate;
+}
+
+.video-section {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  padding-bottom: 150px;
+}
+
+.video-section iframe {
+  width: 100%;
+  height: 45vw; /* 비율 유지 */
+  max-height: 450px;
+}
+
+.back-button {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #FFD700;
+  color: white;
+  border: none;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  transition: transform 0.2s ease;
+  outline: none;
+}
+.back-button:focus,
+.back-button:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+  background-color: #00cc00;
+}
+
+.back-button:focus {
+  outline: none;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.zoom-symbol {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 500px;
+  height: 20px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #00ff00, red);
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid black;
+  cursor: pointer;
+  margin-top: -2px;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+
+
+  </style>
+</head>
+<body>
+<!-- 이미지 -->
+
+<div id="popup" class="popup" onclick="playEcoliVoice()">
+  <p>
+    “나는.. 따3$뜻한 수증-+기 속에서 (조...용히) 아무#도 모르;}게<br>
+폐@#를 노려.. 숨결 틈사이로 스멀스멀 기어들어가”
+    <br><br><strong style="color: yellow;">(클릭하여 음성 듣기)</strong>
+  </p>
+</div>
+
+<script>
+  window.onload = function () {
+    document.getElementById('popup').style.display = 'block';
+  };
+
+  function playEcoliVoice() {
+    const audio = document.getElementById('ecoli-audio');
+    audio.play().catch(err => {
+      alert("브라우저에서 음성 재생이 차단되었습니다.");
+    });
+    document.getElementById('popup').style.display = 'none';
+  }
+</script>
+
+<!-- 오디오 -->
+<audio id="ecoli-audio" src="legio-voice.mp3"></audio>
+
+<script>
+  let played = false;
+  window.addEventListener('scroll', () => {
+    if (!played) {
+      const audio = document.getElementById('ecoli-audio');
+      audio.play().then(() => {
+        console.log("오디오 재생 성공");
+        played = true;
+      }).catch((err) => {
+        console.error("오디오 재생 실패:", err);
+      });
+    }
+  }, { once: true });
+</script>
+
+
+  <div class="container">
+    <div class="ecoli-image">
+      <div class="zoom-wrapper">
+  <img id="zoom-target" src="legio-main.jpg" alt="대장균 이미지">
+</div>
+
+<div class="slider-container">
+  <span class="zoom-symbol">-</span>
+  <input type="range" id="zoom-range" min="1" max="5" step="0.01" value="1">
+  <span class="zoom-symbol">+</span>
+</div>
+
+    
+    
+    </div>
+    <div class="ecoli-text">
+      <h1>레지오넬라균</h1>
+      <table class="ecoli-table">
+        <tr><td>학명</td><td>Legionella pneumophila</td></tr>
+        <tr><td>주요 특징</td><td>공기 중 비말로 감염</td></tr>
+        <tr><td>감염 경로</td><td>증기·수증기 흡입 (샤워 중)</td></tr>
+        <tr><td>위험성</td><td>높음 (레지오넬라 폐렴, 치사율 ↑)</td></tr>
+        <tr><td>예방법</td><td>배관 청소, 정기적인 온수 관리</td></tr>
+      </table>
+      <div class="ecoli-desc">
+       레지오넬라균(Legionella spp.)은 주로 따뜻한 물속에서 번식하는 세균으로, 사람의 호흡기를 통해 감염될 수 있는 병원성 미생물이다. 특히 25~45도의 온수에서 잘 자라며, 샤워기, 욕조, 온수기, 에어컨 냉각탑처럼 수증기나 미세한 물방울이 발생하는 환경에서 자주 발견된다.<br>
+       이 균은 물을 마시는 것만으로는 감염되지 않지만, 오염된 물에서 생긴 에어로졸(aerosol) — 즉 눈에 보이지 않는 수증기나 미세 물방울 — 을 들이마실 경우 폐로 침투해 감염을 일으킬 수 있다. 대표적인 질병으로는 고열과 기침, 호흡곤란을 유발하는 레지오넬라 폐렴이 있으며, 심한 경우 치명적일 수 있다.<br>
+       면역력이 약한 고령자나 만성 질환자에게 특히 위험하며, 감염 예방을 위해서는 샤워기와 온수기 등 물이 고이기 쉬운 장소를 정기적으로 세척하고 고온(50℃ 이상)으로 유지하는 것이 중요하다. 일상 속 수증기 너머에 숨어 있는 이 미생물은, 관리되지 않은 화장실이나 욕실 환경에서 조용히 침투 기회를 노리고 있다.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+<div class="image-canvas">
+  <img src="l3.jpg" class="img1 rotate2">
+  <img src="l1.jpeg" class="img2 float wander2">
+  <img src="l1.jpeg" class="img9 rotate">
+  <img src="l1.jpeg" class="img3 wiggle drift delay3">
+  <img src="l2.jpg" class="img4 float">
+  <img src="l3.jpg" class="img5 wander 3">
+  <img src="l3.jpg" class="img6 float">
+  <img src="l4.jpg" class="img7 drift wander 4">
+  <img src="l5.jpg" class="img8 wiggle wander5">
+</div>
+</section>
+
+<section style="margin-top: 200px;">
+<div class="video-section">
+  <iframe width="<iframe width="560 height="315" src="https://www.youtube.com/embed/Pf45dFC2-OQ?si=3EeqaF_AiHUlxOsZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>"
+</div>
+</section>
+
+  <script>
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+
+    // 비틀기 + 확대 + 색 왜곡
+    const rotate = Math.sin(scrollY / 20) * 1.5; // 흔들
+    const skewX = Math.cos(scrollY / 25) * 1.2;
+    const scale = 1 + Math.sin(scrollY / 40) * 0.015;
+
+    const hue = scrollY % 360; // 색상 휘몰아치듯
+    const contrast = 100 + Math.sin(scrollY / 15) * 20;
+
+    document.body.style.transform = `
+      rotate(${rotate}deg)
+      skewX(${skewX}deg)
+      scale(${scale})
+    `;
+
+    document.body.style.filter = `
+      hue-rotate(${hue}deg)
+      contrast(${contrast}%)
+    `;
+
+    lastScroll = scrollY;
+  });
+</script>
+
+
+<script>
+  const zoomTarget = document.getElementById('zoom-target');
+  const zoomRange = document.getElementById('zoom-range');
+
+  zoomRange.addEventListener('input', () => {
+    const scale = zoomRange.value;
+    zoomTarget.style.transform = `scale(${scale})`;
+  });
+</script>
+</section>
+
+<button class="back-button" onclick="history.back(); this.blur();">←</button>
+
+</body>
+</html>
